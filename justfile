@@ -17,6 +17,12 @@ lint:
 check:
     pnpm check
 
+# Build and deploy to Cloudflare (colours.preset.nz). Workers Builds deploys main
+# automatically; this is the manual escape hatch.
+[group('build')]
+deploy:
+    pnpm run deploy
+
 [group('build')]
 build-libraries:
     pnpm tsx scripts/build-libraries.ts

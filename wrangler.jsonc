@@ -1,0 +1,16 @@
+{
+  // Assets-only Worker: no `main`, Cloudflare serves ./dist directly and applies
+  // public/_headers. No SPA fallback — the app has no client routes, and a 200
+  // index.html for a missing /word-encoder/* file would get runtime-cached by the
+  // service worker as if it were the model.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "a-colour",
+  "compatibility_date": "2026-09-27",
+  "assets": {
+    "directory": "./dist"
+  },
+  "routes": [{ "pattern": "colours.preset.nz", "custom_domain": true }],
+  "observability": {
+    "enabled": true
+  }
+}

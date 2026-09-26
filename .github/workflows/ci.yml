@@ -1,0 +1,40 @@
+name: CI
+
+# Signal, not a gate: Cloudflare Workers Builds deploys main on its own. This
+# workflow runs the quality gate and a build on every push and PR to main.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: biome · tsc · vitest · build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Check (biome + tsc + vitest)
+        run: pnpm check
+
+      - name: Build
+        run: pnpm build

@@ -58,3 +58,5 @@ training/*.egg-info/
 # Phase B — full-precision ONNX (86 MB) is sanity-only; we ship the int8
 # quantised model in onnx/model_quantized.onnx.
 public/word-encoder/onnx/model.onnx
+
+.wrangler
