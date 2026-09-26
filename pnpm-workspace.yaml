@@ -1,2 +1,8 @@
 allowBuilds:
   '@parcel/watcher': true
+
+# Security floors for transitive deps of the pinned @huggingface/transformers
+# 4.2.0 (see CLAUDE.md). Both are Node-only; nothing here reaches the bundle.
+overrides:
+  sharp: ">=0.35.4"
+  adm-zip: ">=0.6.1"
