@@ -16,6 +16,13 @@ lint:
 [group('quality')]
 check:
     pnpm check
+    python3 scripts/check-python-licenses.py
+
+# Licence gate only (npm always, training/ when its venv exists). Also part of `check`.
+[group('quality')]
+licenses:
+    pnpm licenses
+    python3 scripts/check-python-licenses.py
 
 # Build and deploy to Cloudflare (colours.preset.nz). Workers Builds deploys main
 # automatically; this is the manual escape hatch.

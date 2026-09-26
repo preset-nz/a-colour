@@ -29,3 +29,7 @@ Colour is perception. The name that fits a swatch for you may not fit it for som
 ## Run it
 
 [colours.preset.nz](https://colours.preset.nz) — free, no account, works offline.
+
+## Licence
+
+MIT — see [`LICENSE`](LICENSE). Colour data, the word-encoder model and fonts keep their own terms; see [`THIRD-PARTY.md`](THIRD-PARTY.md).

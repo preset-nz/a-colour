@@ -12,6 +12,7 @@ dependencies = [
     "onnxruntime>=1.18",
     "optimum[onnxruntime]>=1.20",
     "numpy>=1.26,<3",
+    "pip-licenses>=5",
 ]
 
 [build-system]

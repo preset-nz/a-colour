@@ -10,9 +10,10 @@
     "preview": "vite preview",
     "test": "vitest run",
     "lint": "biome check --write . && tsc -b && vitest run",
-    "check": "biome check . && tsc -b && vitest run",
+    "check": "biome check . && tsc -b && vitest run && tsx scripts/check-licenses.ts",
     "format": "biome format --write .",
-    "deploy": "pnpm run build && wrangler deploy"
+    "deploy": "pnpm run build && wrangler deploy",
+    "licenses": "tsx scripts/check-licenses.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
@@ -51,5 +52,6 @@
       "protobufjs",
       "sharp"
     ]
-  }
+  },
+  "license": "MIT"
 }

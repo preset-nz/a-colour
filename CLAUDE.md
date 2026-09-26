@@ -114,6 +114,10 @@ Repo: `preset-nz/a-colour`. Served by the Cloudflare Worker `a-colour` (`wrangle
 - `just deploy` (build + `wrangler deploy`) is the manual escape hatch.
 - `compatibility_date` must not be ahead of UTC today, or the deploy is rejected.
 
+## Licence
+
+MIT (`LICENSE`). Third-party data, model and fonts are listed in `THIRD-PARTY.md`. `pnpm check` runs the npm licence gate (`scripts/check-licenses.ts`); `just check` adds the Python gate for `training/` when its venv exists. Exceptions change in the script and `THIRD-PARTY.md` in the same commit.
+
 ## Commands
 
 Day-to-day, use the Justfile:
