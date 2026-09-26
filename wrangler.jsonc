@@ -16,6 +16,8 @@
     { "pattern": "colours.preset.nz", "custom_domain": true },
     { "pattern": "colors.preset.nz", "custom_domain": true }
   ],
+  // Non-production branches build with `wrangler preview`, which needs this block.
+  "previews": {},
   "observability": {
     "enabled": true
   }

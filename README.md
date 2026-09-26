@@ -32,4 +32,4 @@ Colour is perception. The name that fits a swatch for you may not fit it for som
 
 ## Licence
 
-MIT — see [`LICENSE`](LICENSE). Colour data, the word-encoder model and fonts keep their own terms; see [`THIRD-PARTY.md`](THIRD-PARTY.md).
+[MIT](LICENSE).
