@@ -70,20 +70,20 @@ Sampling lives in `src/lib/sampling.ts` (`sampleAverageColor`) and is shared by 
 
 ## Tech stack notes
 
-- **React 19** + **Vite 8** + **TypeScript 6** + **Tailwind v4** (via `@tailwindcss/vite`, not a config file — utilities come from `@import "tailwindcss"` in `src/index.css`).
+- **React 19** + **Vite 8** + **TypeScript 7** + **Tailwind v4** (via `@tailwindcss/vite`, not a config file — utilities come from `@import "tailwindcss"` in `src/index.css`).
 - **UI primitives**: `@base-ui/react` (Popover, Button) — *not* Radix, even though `components.json` exists from a shadcn scaffold. The shadcn config is mostly historical; if adding components, prefer base-ui or hand-rolled over `npx shadcn add`.
 - **Icons**: `lucide-react`.
 - **Package manager**: pnpm (pinned via `packageManager` in `package.json`). `pnpm-lock.yaml` is committed.
 - **Lint + format**: [Biome](https://biomejs.dev) (`biome.json`). Replaces the old ESLint + (no) Prettier setup. Run via `pnpm check` / `pnpm format` (or via the Justfile, below).
 - **Task runner**: [just](https://github.com/casey/just) (`justfile`). The three canonical recipes are `just install`, `just check`, `just run` — see below.
 - **Tests**: [Vitest](https://vitest.dev) (shares Vite's resolver — no parallel config). Tests live next to the code: `src/lib/color-matcher.test.ts`. The perceptual matching is the load-bearing thing worth testing, and that's what's covered. Don't reach for `@testing-library/react` / DOM / jsdom unless you have a real reason — UI tests are not worth their cost on a project this opinionated. Tests run inside `pnpm check`, so `just check` stays the single quality gate.
-- `@huggingface/transformers` is in `dependencies` but unused; it was for an experiment, leave it for now.
+- `@huggingface/transformers` runs the Phase-B word encoder. **Pinned at exactly 4.2.0**: 4.3.0 ships a 26.9 MB ORT wasm, over Cloudflare's 25 MiB per-asset limit. Before bumping, build and check `find dist -size +24M` is empty; if it isn't, move the big files to R2 behind the Worker rather than staying pinned.
 
 ### Path aliases & conventions
 
 - `@/` → `src/` (see `vite.config.ts` and `tsconfig.app.json`).
 - UI under `src/components/ui/`, app components under `src/components/`, pure logic under `src/lib/`.
-- The design follows the **preset.nz studio-site** (`/Users/georg/rhizomatic-preset/studio-site`). Same colour tokens (`--paper`, `--ink`, `--silver`, `--ghost`, `--teal*`, `--off`), same fonts: **Bebas Neue** for headings, **Libre Baskerville** for body, **IBM Plex Mono** for technical labels (10px / 0.14em uppercase weight 300). Halftone + grain overlay on `body::before` / `body::after` — don't strip when editing global CSS. When in doubt about a typography or spacing decision, check `studio-site/src/styles/global.css` first.
+- The design follows the **preset.nz studio-site** (`/Users/georg/rhizomatic-preset/sites/studio-site`). Same colour tokens (`--paper`, `--ink`, `--silver`, `--ghost`, `--teal*`, `--off`), same fonts: **Bebas Neue** for headings, **Libre Baskerville** for body, **IBM Plex Mono** for technical labels (10px / 0.14em uppercase weight 300). Halftone + grain overlay on `body::before` / `body::after` — don't strip when editing global CSS. When in doubt about a typography or spacing decision, check `studio-site/src/styles/global.css` first.
 - A CSS custom property `--highlight` tracks the currently picked colour and propagates to focus rings, match-card borders, etc. Updated in an effect in `App.tsx`.
 
 ## Code style: SOLID and CUPID
@@ -103,8 +103,16 @@ The codebase is small and functional (no classes worth speaking of), so apply th
 - **Composable** — small functions that combine. `hexToRgb` → `rgbToOklab` → `weightedOklabDistance` is the shape we like. Resist combining them into one mega-function "for clarity".
 - **Unix philosophy** — each module does one thing well. The matcher doesn't import React; the camera component doesn't import the CSV.
 - **Predictable** — same inputs, same outputs. The matcher is a pure function over `(hex, colorList)`; keep it that way. No hidden globals, no `Date.now()` sneaking in.
-- **Idiomatic** — modern React 19 / TS 6. Function components and hooks, ESM, no `forwardRef` gymnastics unless React forces them on us.
+- **Idiomatic** — modern React 19 / TS 7. Function components and hooks, ESM, no `forwardRef` gymnastics unless React forces them on us.
 - **Domain-based** — naming comes from the colour domain: `ColorReference`, `ColorMatch`, `closeness`, `primaryColorName`. Don't dilute them into `Item`, `Result`, `Score`.
+
+## Hosting & deploy
+
+Repo: `preset-nz/a-colour`. Served by the Cloudflare Worker `a-colour` (`wrangler.jsonc`): static assets from `./dist` with `public/_headers` applied, plus `worker/index.ts`, which only 301s `colors.preset.nz` → `colours.preset.nz` (canonical). No SPA fallback on purpose: a missing `/word-encoder/*` file must 404, not return `index.html` for the service worker to cache.
+
+- Cloudflare Workers Builds deploys `main`. GitHub Actions (`.github/workflows/ci.yml`) runs `pnpm check` + build as signal, not a gate.
+- `just deploy` (build + `wrangler deploy`) is the manual escape hatch.
+- `compatibility_date` must not be ahead of UTC today, or the deploy is rejected.
 
 ## Commands
 
