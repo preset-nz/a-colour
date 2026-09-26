@@ -1,4 +1,4 @@
-# Cloudflare Pages headers. Vite emits content-hashed filenames into /assets/,
+# Cloudflare static-asset headers. Vite emits content-hashed filenames into /assets/,
 # and the PWA's word-encoder model never changes for a given URL — both groups
 # are safe to cache aggressively. HTML and the service worker stay short-lived
 # so updates land on the next visit.

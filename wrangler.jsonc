@@ -1,0 +1,24 @@
+{
+  // Static assets from ./dist, with public/_headers applied. worker/index.ts runs
+  // first only to 301 colors.preset.nz → colours.preset.nz. No SPA fallback — the
+  // app has no client routes, and a 200 index.html for a missing /word-encoder/*
+  // file would get runtime-cached by the service worker as if it were the model.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "a-colour",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-09-26",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "routes": [
+    { "pattern": "colours.preset.nz", "custom_domain": true },
+    { "pattern": "colors.preset.nz", "custom_domain": true }
+  ],
+  // Non-production branches build with `wrangler preview`, which needs this block.
+  "previews": {},
+  "observability": {
+    "enabled": true
+  }
+}
