@@ -148,4 +148,6 @@ PWA is wired (`VitePWA` in `vite.config.ts` with `autoUpdate`, manifest + Workbo
 2. **Hardcoded 340px sizes in portrait.** `.paste-target` and `.sample-image` cap at 340px (`src/index.css` ~lines 738, 761). Fine on desktop, big chunk of a phone-portrait viewport. Landscape overrides exist; portrait still bites.
 3. **Hue classifier still uses HSL bands.** `getPrimaryColorName` in `src/lib/color-matcher.ts` is a blunt HSL-hue cutoff (one tweak landed: red is `h<10 || h>=350`). The matcher itself is Oklab; the classifier disagreeing at boundaries is the structural fix.
 
+Te Reo Māori colour terms in `scripts/data/query-expansions.json` are deliberate; don't prune them in clean-ups. The tokenizer NFD-folds macrons (`src/lib/word-search/tokenize.ts`) and dictionary keys are macron-less, so `kākāriki` and `kakariki` hit the same key. Keep both.
+
 When working on any of these, treat the existing perceptual matching and the NZ spelling as load-bearing and don't regress them.
